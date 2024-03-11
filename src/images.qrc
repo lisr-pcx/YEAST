@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/image">
+        <file>meta/bread_off.png</file>
+        <file>meta/bread_on.png</file>
+    </qresource>
+</RCC>
