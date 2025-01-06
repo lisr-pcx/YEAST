@@ -24,6 +24,8 @@ This is not elegant, well written C++, if you are looking for that, then this is
 The goal of *YE.A.S.T.* is to measure the time spent on daily task and provide a simple interface to track them.  
 Last three years I just used a plain text file to solve perfectly this scope, *"Live simply"*. But I have admit that when your list start to be bigger a kind of highlighting syntax and few quick automation can make your life easier at standup meetings (or when managers call you asking the progress status).
 
+![screenshot](sample.png)
+
 Each operation shall be done via keyboard input (do not waste time using the mouse).
 
 ### Features
