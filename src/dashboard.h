@@ -14,13 +14,11 @@
 #include <QMainWindow>
 #include <QTimer>
 #include <QKeyEvent>
-#include <QLabel>
-#include <QVector>
+#include <QCloseEvent>
 #include <QDebug>
 #include "global.h"
+#include "highlight.h"
 #include "screen_unlock.h"
-#include "timetracker_manager.h"
-#include "history.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class DashBoard; }
@@ -35,29 +33,25 @@ public:
     ~DashBoard();
 
 public slots:
-    void UpdateGUIBackground(bool status, unsigned int task_index);
-    void UpdateGUI(gui_information_t info);
+    void AutoSave();
+    void UpdateRecords();
     void UpdateGUILockscreen(bool active);
+
+protected:
+    void closeEvent(QCloseEvent *event) override;
+    void keyPressEvent(QKeyEvent* key_event) override;
 
 private:
     Ui::DashBoard*  ui;
-    History*        _ptr_history;
+    QTimer          _timer_autosave;
+    QTimer          _timer_recording_task;
+    Highlight*      _ptr_highlight_manager;
+    ScreenUnlock*   _ptr_screen_unlock_manager;
+    QString         _recording_task;
 
-    ScreenUnlock* _ptr_screen_unlock_manager;
-    TimeTracker* _ptr_timetracker_manager;
-
-    QVector<QLabel*> _gui_task_info;
-
-    // Application is mainly managed via key shortcut:
-    //      CTRL + 0            : start counting on task "0"
-    //      ...
-    //      CTRL + 9            : start counting on task "9"
-    //      CTRL + <UP>         : move to previous on daily history
-    //      CTRL + <DOWN>       : move to next on daily history
-    //      CTRL + <RIGHT>         : add time on selected task
-    //      CTRL + <LEFT>       : remove time on selected task
-    //      CTRL + l/L          : enable/disable on screen unlock
-
-    void keyPressEvent(QKeyEvent* key_event);   // override
+    void toggleStatus(void);
+    void recordTask(void);
+    void openFile(const QString file_path);
+    void saveFile(const QString file_path);
 };
 #endif // DASHBOARD_H

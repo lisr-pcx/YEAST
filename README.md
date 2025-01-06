@@ -39,9 +39,9 @@ Each operation shall be done via keyboard input (do not waste time using the mou
 
 There is a kind of portable beta release here:
 
-| File | Architecture | Checksum |
+| File | Architecture | Checksum MD5 |
 | --- | --- | --- |
-| FILENAME | Windows XX 64 bit portable | SHA |
+| [YEAST_v_0_6_BETA_Win64bit_portable.7z](releases/YEAST_v_0_6_BETA_Win64bit_portable.7z) | MS Windows 11 x64 | fc8acf9255a2271ceeca6456b900135e |
 
 But I highly suggest to clone the project and run it via Qt creator IDE (Qt 5.15.x).
 
