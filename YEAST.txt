@@ -1,0 +1,134 @@
+
+	THIS IS YOUR WORKPLACE :) ENJOY
+
+
+This editor is basic and all feature are triggered by keyboard, mouse is rarely used.
+Colors has used to highlight status.
+(Actually I'm slightly colorblind, let me know if you find some anomalies)
+
+Currently the windows has a fixed size.
+(Fixed? What? Yes.. I know. But this is beta release, let me see how things go..)
+
+Content is stored in a local text file named "YEAST.txt"
+
+Press CTRL+h to show the list of available shortcuts.
+
+The usual shortcuts for copy (CTRL+c), paste (CTRL+v), cut (CTRL+x) work here as well.
+
+The example below is used for the tutorial.
+Feel free to customize and re-organize thing based on your need and workflow.
+
+
+============
+LIST OF TASK  (all titles and decoration are not real separator, just text)
+============
+Task must be declared between characters "<" and ">", and always starting at beginning of the line.
+A valid task is written in "bold" blu color.
+
+This is ok:
+<sample task A>
+
+These are not:
+<kind of half-task
+kind of half-task>
+	<almost ok> just remove TAB at beginning to make it cool
+
+Sub-task are not a real element, I just list them (TAB is optional) to keep my todo list well organized.
+
+<PROJECT A task tile>
+	- Prepare doc before meeting
+	- Issue analysis
+	- Review design implementation
+	- Coding modules AA, BB
+	- Coding modules CC + test integration on sim yyy
+	Do not use sim xxx (due to its limitation)
+	- Update GANTT
+	Book holidays before Friday, do not forget
+
+Yeah, it looks fine but we can have statuses for a better eye-scan overview.
+Just use these keywords: TODO, PROGRESS, WAIT, DONE between characters "[" and "]".
+There are no restrictions where to put them, also inside other text as showed here:
+
+		"just some random text [PROGRESS] to demonstrate the status box... "
+
+
+<PROJECT B another title>
+	[TODO] 		- Prepare doc before meeting
+	[DONE] 		- Issue analysis
+	[DONE] 		- Review design implementation
+	[PROGRESS] 	- Coding modules AA, BB
+	[WAIT] 		- Coding modules CC + test integration on sim yyy
+	Do not use sim xxx (due to its limitation)
+	[TODO] Update GANTT
+	Book holidays before Friday, do not forget
+
+When the cursor is inside a status box you can toogle between status via CTRL+t.
+It's more quick than write all chars.
+
+Important texts can be written in red color, just put the symbol: (!)
+The text on the right section will be red. This works only on a single line.
+
+	You want this note important  (!) this text is important ...
+
+If you need something more "eye capturing":
+
+	(!) THIS IS VERY
+	(!) IMPORTANT
+	(!) multiline note
+
+
+Finally a good way to write things can be:
+
+<PROJECT C title>
+	[TODO] 		- Prepare doc before meeting
+	[DONE] 		- Issue analysis
+	[DONE] 		- Review design implementation
+	[PROGRESS] 	- Coding modules AA, BB
+	[WAIT] 		- Coding modules CC + test integration on sim yyy
+				(!) Do not use sim xxx (due to its limitation)
+
+	[TODO] Update GANTT
+
+	(!) Book holidays before Friday, do not forget
+
+
+....
+....
+If you want to add personale notes, quotes, whatever... Here is a great place to put them.
+Use any kind of decorator or separator.
+
+				      !!!!!
+				      |O O|
+				---o0o--U--o0o---
+....
+....
+
+
+===========================================================
+TIMESHEET SECTION ... Where numbers change automatically :D
+===========================================================
+This is where the time spent on the tasks above is stored.
+Each line state clearly all information.
+When a task is already listed (for current date) then the minutes are updated, otherwise it is added at the end.
+
+To start recording just move text cursor on the desired task and press CTRL+r
+To stop recording press again CTRL+r (cursor can be anywhere outside a task)
+
+Minimun granularity is minutes.
+
+Records are currently not ordered! You can re-arrange them as you desired but please keep this format.
+
+(!) VERY IMPORTANT TIP: do not write anything important below this section... (!)
+
+2025-01-02		24		<sample task A>
+2025-01-03		8		<previous task> maybe now it's deleted from your above list, but records still stay here
+2025-01-04		8		<another previous task> 
+2025-01-05		6		<random task>
+2025-01-05		999		<do some stuff>
+2025-01-06		2		<sample task A>
+2025-01-06		5		<sample task B>
+2025-01-06		2		<sample task C>
+2025-01-06		7		<PROJECT A task tile> hey, you can add some notes if you want
+							- and also add some indented notes...
+							(!) but be aware that some record can be automatically added below...
+2025-01-06		8		<PROJECT B another title>

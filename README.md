@@ -1,92 +1,83 @@
 # YEAST
 
+![logo](src/yeast.ico)
+
 **YE**t
 **A**nother
 **S**imple
 **T**imetracker
 
 > [!WARNING]
-> Missing feature, source code is not stable, CSS stylesheet are really ugly ... work in progress
+> WIP. Some features are still missing. It seems kind of stable, but backup your notes before use it.
 
 ## Introduction
 
-The project started on March 2023 for educational purpose.
+The project started on March 2023 for educational purpose. I changed the GUI and re-designed many times, just because I didn't spent enough time to understand my (the user) needs and the daily workflow.  
+I'll probably do some code refactoring, abstracting class here and there ... but at least the scope is now clear.
 
-> [!TIP]
-> Always keep track of time spent on tasks, the management will come asking for numbers (and they are not friendly)
+This is not elegant, well written C++, if you are looking for that, then this is not the right project.
 
-## Description
+### The goal
 
-The goal of *YE.A.S.T.* is to measure the time spent on daily task and provide a simple easy interface. 
+> Always keep track of time spent on tasks. One day the management will come to you asking for numbers, and reasons ... be prepared!
+
+The goal of *YE.A.S.T.* is to measure the time spent on daily task and provide a simple interface to track them.  
+Last three years I just used a plain text file to solve perfectly this scope, *"Live simply"*. But I have admit that when your list start to be bigger a kind of highlighting syntax and few quick automation can make your life easier at standup meetings (or when managers call you asking the progress status).
 
 Each operation shall be done via keyboard input (do not waste time using the mouse).
 
-**Keyboard commands**
+### Features
 
-* <CTRL> + <i> : show information box
-* <CTRL> + <h> : show records history
-* <CTRL> + <UP> : when history is available, then search records on previous date
-* <CTRL> + <DOWN> : when history is available, then search records on next date
-* <CTRL> + <L> : enable or disable the lock of the screen
-* <CTRL> + <0> .. <9> : toggle monitoring on the specific task
++ Based on regular text file
++ Tasks and sub-task can be written freely together with notes
++ Sub-tasks can have a STATUS highlighted in different colors for quick eye-scan-overview
++ Minutes/hours spent on tasks must be *automatically* tracked and written in the same text file
++ Prefer key shortcuts instead of mouse (no button, no right-click menù ...)
++ Stripped-back GUI
 
-## IDE and toolchain
+## User Manual
 
-Please use Qt creator 5.15.x.
+There is a kind of portable beta release here:
 
-## Overview
+| File | Architecture | Checksum |
+| --- | --- | --- |
+| FILENAME | Windows XX 64 bit portable | SHA |
 
-### Class Dashboard
+But I highly suggest to clone the project and run it via Qt creator IDE (Qt 5.15.x).
 
-This is the main window for the user (GUI).
+The editor open the local file "", and basically is just a text editor with some pre-defined syntax highlighting.
 
-* Load and enable screen unlock
-* Manage key press
-* Load time tracker manager
-* Load history widget
+I put some notes directly on that file, to explain how things work on the fly... After that you can entirely rewrite the content according to your needs and workflow.
 
-### Class DbManager
+### Key shortcuts
 
-On the first draft of this application have been used CSV files, but currently as SQL lite database is used to store all records. 
-The database is created if it does not exist (YEAST.db)
++ *CTRL + h* : show help
++ *CTRL + l* : enable/disable auto screen lock (see NOTE-1)
++ *CTRL + t* : toggle sub-tasks status (todo, progress, wait, done)
++ *CTRL + r* : start/stop task time recording
++ *CTRL + s* : save text (see NOTE-2)
 
-Design pattern: Singleton
+## Software architecture
 
-### Class History
+TODO
 
-Widget for records navigation. 
-Currently is not implemented a model-view pattern, data are just retrieved from database and showed.
+## F.A.Q.
 
-### Class ScreenUnlock
+**NOTE-1**  
+some company laptop have automatic lock protection that switch to login screen when there no user interaction for x minutes.  
+Frankly this *feature* is quite annoying when you are staring at some design document writing notes on paper or just trying to understand the issue and a #@*! wallpaper with login appears on screen.
+To avoid that I added a simple workaround using OS signals, nothing fancy, make you research on the web :)  
+*Anyway privacy and safety are important for companies, I understand their requirements, just don't make my job more difficult!*
 
-When enabled send periodically signals to OS, to keep process active and avoid automatic screen lock features from administrators.
-
-### Class SingleRecord
-
-This class represent a single record (allocated into dynamic memory). 
-A dedicated Timer object is used in order for time monitoring (it counts minutes).
-
-### Class Timetracker
-
-This class do all business logic about record creation and store.
-An ended record is instantly stored into databse. 
-At application startup all records of current date (today) are retrieved in order to udpate daily statistics.
-
-### Missing FEATUREs and BUGs list
-
-- [ ] Fix stylesheets, they are ugly
-- [ ] History, DbManager: add feature to add and edit comments
-- [ ] TimeTracker: add feature, when db is not available then store into external CSV (and also sync this file with db)
-
-## Documentation
-
-This README file is the official source of information
+**NOTE-2**  
+There is also an autosave timer running in background every 5 minutes, and finally it saves also before exiting the program.
 
 ## Contribute
 
-Please read the CONTRIBUTE file for guidelines. Thanks for your help!
+No guidelines right now.  
+For tips, problems, comments just open an issue and we'll think about it... Thanks!
 
-## Licensing
+## License
 
 The *YE.A.S.T.* software is licensed under the [GNU General Public License Version 3](http://www.gnu.org/licenses/gpl.html). 
 Please refer to LICENSE file for details.
