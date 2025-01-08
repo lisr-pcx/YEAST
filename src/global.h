@@ -30,4 +30,30 @@ const QString k_style_for_central_widget_recording = "background-image:url(:/ima
                                                      "background-repeat: no-repeat; "
                                                      "background-position: center; ";
 
+static QString convMinutesToReadableString(unsigned int minutes)
+{
+    unsigned int hh = minutes / 60;
+    unsigned int mm = minutes % 60;
+    QString text = QString::number(hh) + "h";
+    if (mm >= 45)
+    {
+        text.append("45");
+    }
+    else if (mm >= 30)
+    {
+        text.append("30");
+    }
+    else if (mm >= 15)
+    {
+        text.append("15");
+    }
+    // Output format is:
+    // (where N is number of hours, approx to floor, granularity is 15 min)
+    //      Nh
+    //      Nh15
+    //      Nh30
+    //      Nh45
+    return text;
+};
+
 #endif // GLOBAL_H

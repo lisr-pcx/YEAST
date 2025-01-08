@@ -63,7 +63,6 @@ DashBoard::DashBoard(QWidget *parent)
     this->_recording_task = "";
     connect(&_timer_recording_task, &QTimer::timeout, this, &DashBoard::UpdateRecords);
 
-
     // see https://doc.qt.io/qt-5/qtwidgets-richtext-syntaxhighlighter-example.html
 }
 
@@ -95,7 +94,7 @@ void DashBoard::UpdateRecords()
 
     // search the the task on the text and update the time spent on it
     QString today = QDate::currentDate().toString("yyyy-MM-dd");
-    QString record = "\n" + today + "\t\t([0-9]+)\t\t" + _recording_task;
+    QString record = "\n" + today + "\t\t([0-9]+) \(.*\) {1,5}\t" + _recording_task;
     QRegularExpression re_task_on_timesheet(record);    
     QString text = ui->txtEditor->toPlainText();
     QRegularExpressionMatch found_match = re_task_on_timesheet.match(text);
@@ -103,12 +102,18 @@ void DashBoard::UpdateRecords()
     {
         // update time (minutes)
         unsigned int time = found_match.captured(1).toUInt();
-        text.replace(re_task_on_timesheet, "\n" + today + "\t\t" + QString::number(++time) + "\t\t" + _recording_task);
+        time++;
+        QString time_human_readable = "(" + convMinutesToReadableString(time) + ")";
+        text.replace(re_task_on_timesheet, "\n" +
+                     today + "\t\t" +
+                     QString::number(time) + " " +
+                     time_human_readable.leftJustified(9, ' ') + "\t" +
+                     _recording_task);
     }
     else
     {
         // add task recording at the bottom
-        text.append("\n" + today + "\t\t1\t\t" + _recording_task);
+        text.append("\n" + today + "\t\t1 (0h)     \t" + _recording_task);
     }
     ui->txtEditor->setPlainText(text);
 

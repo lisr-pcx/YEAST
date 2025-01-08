@@ -1,11 +1,10 @@
 //============================================================================
-// Name        : main.cpp
-// Author      : F.Tessarollo
-// Version     : 0.5
+// Project     : YE.A.S.T (YEt Another Small Timetracker)
+// Author      : lisr-pcx (github.com/lisr-pcx)
+// Description : Entry point
 //
-// YE.A.S.T
-// (YEt Another Stupid Timetracker)
-// Please refer to README.md
+// This software come with absolutely no warranty. This is free software and
+// you are welcome to use it, and redistribute. See license file for details.
 //============================================================================
 
 #include <QApplication>

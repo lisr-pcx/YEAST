@@ -2,8 +2,6 @@
 // Project     : YE.A.S.T
 // Please refer to header file
 //============================================================================
-
-#include <QDebug>
 #include "screen_unlock.h"
 
 ScreenUnlock::ScreenUnlock()
@@ -19,7 +17,6 @@ ScreenUnlock::~ScreenUnlock()
 void ScreenUnlock::SendSignalsToOS()
 {
     SetThreadExecutionState(ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED | ES_CONTINUOUS);
-    qDebug() << "Sent trigger to OS to avoid lock screen";
 }
 
 void ScreenUnlock::ToggleActivation()
