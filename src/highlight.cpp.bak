@@ -15,7 +15,6 @@ Highlight::Highlight(QTextDocument *parent)
     keyword_format.setFontWeight(QFont::Bold);
     const QString keyword_patterns[] = {
         QStringLiteral("\\bFIR\\b"),
-        QStringLiteral("\\bBOL\\b"),
         QStringLiteral("\\bCRL\\b"),
         QStringLiteral("\\bBGL\\b"),
         QStringLiteral("\\bVBN\\b"),
@@ -50,7 +49,7 @@ Highlight::Highlight(QTextDocument *parent)
     keyword_status_inprogress.setForeground(Qt::black);
     keyword_status_inprogress.setBackground(Qt::green);
     keyword_status_inprogress.setFontWeight(QFont::Bold);
-    rule.pattern = QRegularExpression(QStringLiteral("(\\[\\b(EXEC|PROG|PROGRESS|INPROGRESS|IN PROGRESS|DOING)\\b\\])"));
+    rule.pattern = QRegularExpression(QStringLiteral("(\\[\\b(PROGRESS|INPROGRESS|IN PROGRESS)\\b\\])"));
     rule.format = keyword_status_inprogress;
     highlighting_rules.append(rule);
 

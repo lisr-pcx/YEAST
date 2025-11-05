@@ -4,8 +4,6 @@
 // File        : highlight.h
 // Description : Manage syntax highlighting
 //
-// See also: doc.qt.io/qt-5/qtwidgets-richtext-syntaxhighlighter-example.html
-//
 // This software come with absolutely no warranty. This is free software and
 // you are welcome to use it, and redistribute. See license file for details.
 //============================================================================

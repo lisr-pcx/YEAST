@@ -18,13 +18,6 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QLabel" name="lblWordWrap">
-        <property name="text">
-         <string>  word wrap  </string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -54,11 +47,7 @@
      </layout>
     </item>
     <item>
-     <widget class="QTextEdit" name="txtEditor">
-      <property name="acceptRichText">
-       <bool>false</bool>
-      </property>
-     </widget>
+     <widget class="QTextEdit" name="txtEditor"/>
     </item>
    </layout>
   </widget>

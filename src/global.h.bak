@@ -17,6 +17,7 @@
 
 const QString       k_text_filename             = "YEAST.txt";
 const int           k_recording_task_period_ms  = 60*1000;
+const unsigned int  k_max_daily_hours           = 8;            // max daily working hours allowed
 const int           k_autosave_period_ms        = 5*60*1000;
 
 // Styles for GUI
@@ -34,29 +35,24 @@ static QString convMinutesToReadableString(unsigned int minutes)
     unsigned int hh = minutes / 60;
     unsigned int mm = minutes % 60;
     QString text = QString::number(hh) + "h";
-    if (mm >= 50)
+    if (mm >= 45)
     {
-        text.append("50");
-    }
-    else if (mm >= 40)
-    {
-        text.append("40");
+        text.append("45");
     }
     else if (mm >= 30)
     {
         text.append("30");
     }
-    else if (mm >= 20)
+    else if (mm >= 15)
     {
-        text.append("20");
-    }
-    else if (mm >= 10)
-    {
-        text.append("10");
+        text.append("15");
     }
     // Output format is:
-    // (where N is number of hours, approx to floor, granularity is 10 min)
-    //      Nh,     Nh10,   Nh20,   Nh30,   Nh40,   Nh50
+    // (where N is number of hours, approx to floor, granularity is 15 min)
+    //      Nh
+    //      Nh15
+    //      Nh30
+    //      Nh45
     return text;
 };
 

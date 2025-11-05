@@ -5,7 +5,6 @@
 
 #include <QMessageBox>
 #include <QDate>
-#include <QScrollBar>
 #include "dashboard.h"
 #include "ui_dashboard.h"
 
@@ -28,11 +27,7 @@ DashBoard::DashBoard(QWidget *parent)
     //this->setAttribute(Qt::WA_TranslucentBackground, false);
 
     // block resize and maximize
-    this->setWindowFlags( Qt::Window |
-                          Qt::WindowSystemMenuHint |
-                          Qt::WindowMinimizeButtonHint |
-                          Qt::WindowMaximizeButtonHint |
-                          Qt::WindowCloseButtonHint );
+    this->setWindowFlags( Qt::Window | Qt::MSWindowsFixedSizeDialogHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint );
 
     // setup information labels
     QFont info_font;
@@ -45,9 +40,6 @@ DashBoard::DashBoard(QWidget *parent)
     ui->lblKeepAlive->setStyleSheet("QLabel { background-color : cyan; color : white; }");
     ui->lblKeepAlive->setFont(info_font);
     ui->lblKeepAlive->setVisible(false);
-    ui->lblWordWrap->setStyleSheet("QLabel { background-color : blue; color : white; }");
-    ui->lblWordWrap->setFont(info_font);
-    ui->lblWordWrap->setVisible(true);
 
     // setup editor
     QFont font;
@@ -61,8 +53,6 @@ DashBoard::DashBoard(QWidget *parent)
     const int tab_stop = 4;
     QFontMetrics metrics(font);
     ui->txtEditor->setTabStopWidth(tab_stop * metrics.width(' '));
-    // disable rich text when copy and paste
-    ui->txtEditor->setAcceptRichText(false);
     // set custom highlighting
     _ptr_highlight_manager = new Highlight(ui->txtEditor->document());
 
@@ -71,7 +61,9 @@ DashBoard::DashBoard(QWidget *parent)
 
     // no task recording at startup
     this->_recording_task = "";
-    connect(&_timer_recording_task, &QTimer::timeout, this, &DashBoard::UpdateRecords);    
+    connect(&_timer_recording_task, &QTimer::timeout, this, &DashBoard::UpdateRecords);
+
+    // see https://doc.qt.io/qt-5/qtwidgets-richtext-syntaxhighlighter-example.html
 }
 
 DashBoard::~DashBoard()
@@ -95,15 +87,14 @@ void DashBoard::AutoSave()
 void DashBoard::UpdateRecords()
 {    
     int cursor_position = ui->txtEditor->textCursor().position();
-    int scrollbar_position = ui->txtEditor->verticalScrollBar()->value();
 
-    // WARNING: it seems works fine even when writing during the
+    // WARNING: it seems works fine event when writing during the
     // time update (replace the entire text in the QTextEdit), but
     // probably it's not a good design...
 
     // search the the task on the text and update the time spent on it
     QString today = QDate::currentDate().toString("yyyy-MM-dd");
-    QString record = "\n" + today + "\\s+\\[([0-9]+)\\]\\s+[0-9]+h[0-9]*\\s+" + _recording_task;
+    QString record = "\n" + today + "\t\t([0-9]+) \(.*\) {1,5}\t" + _recording_task;
     QRegularExpression re_task_on_timesheet(record);    
     QString text = ui->txtEditor->toPlainText();
     QRegularExpressionMatch found_match = re_task_on_timesheet.match(text);
@@ -112,16 +103,17 @@ void DashBoard::UpdateRecords()
         // update time (minutes)
         unsigned int time = found_match.captured(1).toUInt();
         time++;
-        QString time_human_readable = convMinutesToReadableString(time);
-        text.replace(re_task_on_timesheet,
-                     "\n" + today + "\t\t[" + QString::number(time) + "]\t\t" +
+        QString time_human_readable = "(" + convMinutesToReadableString(time) + ")";
+        text.replace(re_task_on_timesheet, "\n" +
+                     today + "\t\t" +
+                     QString::number(time) + " " +
                      time_human_readable.leftJustified(9, ' ') + "\t" +
                      _recording_task);
     }
     else
     {
         // add task recording at the bottom
-        text.append("\n" + today + "\t\t[1]\t\t0h\t" + _recording_task);
+        text.append("\n" + today + "\t\t1 (0h)     \t" + _recording_task);
     }
     ui->txtEditor->setPlainText(text);
 
@@ -129,7 +121,6 @@ void DashBoard::UpdateRecords()
     QTextCursor cursor = ui->txtEditor->textCursor();
     cursor.setPosition(cursor_position, QTextCursor::MoveAnchor);
     ui->txtEditor->setTextCursor(cursor);
-    ui->txtEditor->verticalScrollBar()->setValue(scrollbar_position);
 }
 
 void DashBoard::UpdateGUILockscreen(bool active)
@@ -159,10 +150,9 @@ void DashBoard::keyPressEvent(QKeyEvent* key_event)
                                "<code>" +
                                "CTRL+h ........... show help<br>" +
                                "CTRL+l ........... enable/disable auto screen unlock<br>" +
-                               "CTRL+t ........... toggle status (todo, exec, wait, done)<br>" +
+                               "CTRL+t ........... toggle status (todo, progress, wait, done)<br>" +
                                "CTRL+r ........... start/stop task recording<br>" +
                                "CTRL+s ........... save current text<br>" +
-                               "CTRL+w ........... enable/disable word wrap<br>" +
                                "</code>");
         }
         else if ((key_event->key() == Qt::Key_L))
@@ -172,7 +162,7 @@ void DashBoard::keyPressEvent(QKeyEvent* key_event)
         }
         else if ((key_event->key() == Qt::Key_T))
         {
-            // <CTRL> + <t> to toogle status between [TODO, EXEC, WAIT, DONE]
+            // <CTRL> + <t> to toogle status between [TODO, PROGRESS, WAIT, DONE]
             this->toggleStatus();
         }
         else if ((key_event->key() == Qt::Key_R))
@@ -182,8 +172,7 @@ void DashBoard::keyPressEvent(QKeyEvent* key_event)
         }
         else if ((key_event->key() == Qt::Key_W))
         {
-            // <CTRL> + <w> enable/disable wordwrap
-            this->toggleWordWrap();
+            // <CTRL> + <w> to change GUI aspect
         }
         else if ((key_event->key() == Qt::Key_S))
         {
@@ -205,15 +194,10 @@ void DashBoard::toggleStatus(void)
     bool change_status = false;
     if (status=="TODO")
     {
-        status = "EXEC";
+        status = "PROGRESS";
         change_status = true;
     }
-    else if ((status=="EXEC") ||
-             (status=="PROG") ||
-             (status=="PROGRESS") ||
-             (status=="INPROGRESS") ||
-             (status=="IN PROGRESS") ||
-             (status=="DOING"))
+    else if ((status=="PROGRESS") || (status=="INPROGRESS") || (status=="IN PROGRESS"))
     {
         status = "WAIT";
         change_status = true;
@@ -235,20 +219,6 @@ void DashBoard::toggleStatus(void)
         cursor.insertText(status);
         cursor.movePosition(cursor.WordLeft);
         ui->txtEditor->setTextCursor(cursor);
-    }
-}
-
-void DashBoard::toggleWordWrap()
-{
-    if (ui->txtEditor->wordWrapMode() == QTextOption::NoWrap)
-    {
-        ui->txtEditor->setWordWrapMode(QTextOption::WordWrap);
-        ui->lblWordWrap->setVisible(true);
-    }
-    else
-    {
-        ui->txtEditor->setWordWrapMode(QTextOption::NoWrap);
-        ui->lblWordWrap->setVisible(false);
     }
 }
 
@@ -295,7 +265,7 @@ void DashBoard::openFile(const QString file_path)
     QFile text_file(file_path);
     if (text_file.open(QFile::ReadOnly | QFile::Text))
     {
-        ui->txtEditor->setPlainText(QString::fromUtf8(text_file.readAll()));
+        ui->txtEditor->setPlainText(text_file.readAll());
         qInfo() << "Loaded text from: " << file_path;
         // Periodically save file after opening
         _timer_autosave.start(k_autosave_period_ms);
@@ -313,8 +283,6 @@ void DashBoard::saveFile(const QString file_path)
     if (text_file.open(QFile::WriteOnly | QFile::Text))
     {
         QTextStream store(&text_file);
-        store.setCodec("UTF-8");
-        store.setGenerateByteOrderMark(false);
         store << ui->txtEditor->toPlainText();
         qInfo() << "Current text saved into: " << file_path;
     }

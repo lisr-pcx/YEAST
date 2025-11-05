@@ -2,7 +2,7 @@
 // Project     : YE.A.S.T (YEt Another Small Timetracker)
 // Author      : lisr-pcx (github.com/lisr-pcx)
 // File        : dashboard.h
-// Description : Application window (GUI)
+// Description : Main application window (GUI)
 //
 // This software come with absolutely no warranty. This is free software and
 // you are welcome to use it, and redistribute. See license file for details.
@@ -51,7 +51,6 @@ private:
 
     void toggleStatus(void);
     void recordTask(void);
-    void toggleWordWrap(void);
     void openFile(const QString file_path);
     void saveFile(const QString file_path);
 };
