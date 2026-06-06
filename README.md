@@ -15,24 +15,24 @@
 The project started on March 2023 for educational purpose. I changed the GUI and re-designed many times, just because I didn't spent enough time to understand user needs and daily workflow.  
 I'll probably do some code refactoring ... but at least the requirements are defined.
 
-This is not elegant, well written C++.  
-If you are looking for that, it is not the right project.
+It is not elegant, well written C++.  
+If you are looking for that, this is not the right place.
 
 ### The goal
 
-The scope of *YE.A.S.T.* is to measure the time spent on daily task and provide a simple interface to track it, basically a text editor with pre-defined syntax highlighting.
+The scope of *YE.A.S.T.* is to track time spent on daily task and provide a simple interface for notes, todo .. basically a text editor with syntax highlighting.
 
-Last three years I just used a plain text file to solve perfectly this scope, *"Live simply"*, but I have to admit that a basic highlighting syntax and few automation can make your life easier.
+Last three years I just used a plain text file to solve perfectly this scope - *"Live simply"* - but I have to admit that some highlighting and few automations can make your life easier.
 
-> Always keep track of time spent on tasks. One day the management will come to you asking for numbers, and reasons ... be prepared!
+> "[..] always keep track of time spent on tasks. One day the management will come to you asking for numbers, and reasons ... be prepared!
 
 ### Features
 
-+ Based on regular text file (no databases)
-+ Tasks and sub-task can be written freely together with notes
-+ Sub-tasks can have a STATUS highlighted in different colors for a quick eye-scan-overview
-+ Time spent on tasks must be *automatically* tracked and written in the same text file
-+ Prefer key shortcuts instead of mouse actions
++ No database, just store text into regular .txt file on the same folder of the app
++ Notes can be written freely
++ TASK (tag) provide a visual way to organize your work (but are just text)
++ STATUS (tag) highlighted in different colors for a quick eye-scan-overview of what is going on
++ Time spent on tasks is *automatically* tracked and updated at the bottom of the file (in the *timesheet* area)
 + Stripped-back GUI
 
 ![screenshot](sample.png)
@@ -45,23 +45,21 @@ I put some notes directly on that file, to explain how things work. Read and the
 ### Key shortcuts
 
 + *CTRL + h* : show help
-+ *CTRL + l* : enable/disable auto screen lock (see NOTE-1)
-+ *CTRL + t* : toggle sub-tasks status (todo, progress, wait, done)
-+ *CTRL + r* : start/stop task time recording
++ *CTRL + l* : enable/disable screen lock (see NOTE-1)
++ *CTRL + t* : when cursor is inside a STATUS tag then toggle the value (todo, exec, wait, done)
++ *CTRL + r* : when cursor is inside a TASK tag, start/stop time recording
++ *CTRL + w* : enable/disable word wrap
 + *CTRL + s* : save text (see NOTE-2)
 
 ## F.A.Q.
 
 **NOTE-1**  
-Some company laptop have automatic lock screen protection after N mintes inactive.  
-Frankly this *feature* is quite annoying when you are staring at some design document writing notes on paper and a f#@*! login screeen appears. To avoid that I just added a simple workaround triggering periodic OS signals to keep system alive, nothing fancy.  
-This feature is disabled at startup.
+Most of the company laptop have automatic lock screen protection due to inactivity. This is quite annoying when you are staring at some design document, writing down notes on paper, and a login screeen appears. To avoid that, the app can silently send a periodic OS signals to keep system alive, nothing fancy.  
 
 *Anyway make sure to LOCK your laptop when you are away. Privacy and safety policies are important!*
 
 **NOTE-2**  
-There is an autosave timer running in background every 5 minutes.  
-The file is also saved automatically when closing the program.
+File is automatically saved every 5 minutes, or when closing the app.
 
 ## License
 

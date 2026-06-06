@@ -27,7 +27,7 @@ RC_ICONS = yeast.ico
 
 # Version of the software
 VERSION_MAJOR = 0
-VERSION_MINOR = 6
+VERSION_MINOR = 7
 
 DEFINES +=  "VERSION_MAJOR=$$VERSION_MAJOR"\
             "VERSION_MINOR=$$VERSION_MINOR"

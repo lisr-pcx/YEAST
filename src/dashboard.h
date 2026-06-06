@@ -16,6 +16,7 @@
 #include <QKeyEvent>
 #include <QCloseEvent>
 #include <QDebug>
+#include <QSignalMapper>
 #include "global.h"
 #include "highlight.h"
 #include "screen_unlock.h"
@@ -34,7 +35,7 @@ public:
 
 public slots:
     void AutoSave();
-    void UpdateRecords();
+    void UpdateRecords(QString source);
     void UpdateGUILockscreen(bool active);
 
 protected:
@@ -45,6 +46,7 @@ private:
     Ui::DashBoard*  ui;
     QTimer          _timer_autosave;
     QTimer          _timer_recording_task;
+    QSignalMapper   _timer_signal_mapper;
     Highlight*      _ptr_highlight_manager;
     ScreenUnlock*   _ptr_screen_unlock_manager;
     QString         _recording_task;

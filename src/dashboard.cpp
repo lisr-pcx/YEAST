@@ -16,7 +16,7 @@ DashBoard::DashBoard(QWidget *parent)
     ui->setupUi(this);
     this->setWindowTitle("YE.A.S.T. v" +
                          QString::number(VERSION_MAJOR) + "." +
-                         QString::number(VERSION_MINOR) );
+                         QString::number(VERSION_MINOR) + " snap");
 
     connect(&_timer_autosave, &QTimer::timeout, this, &DashBoard::AutoSave);
 
@@ -42,10 +42,10 @@ DashBoard::DashBoard(QWidget *parent)
     ui->lblRecording->setStyleSheet("QLabel { background-color : red; color : white; }");
     ui->lblRecording->setFont(info_font);
     ui->lblRecording->setVisible(false);
-    ui->lblKeepAlive->setStyleSheet("QLabel { background-color : cyan; color : white; }");
+    ui->lblKeepAlive->setStyleSheet("QLabel { background-color : orange; color : white; }");
     ui->lblKeepAlive->setFont(info_font);
     ui->lblKeepAlive->setVisible(false);
-    ui->lblWordWrap->setStyleSheet("QLabel { background-color : blue; color : white; }");
+    ui->lblWordWrap->setStyleSheet("QLabel { background-color : gray; color : white; }");
     ui->lblWordWrap->setFont(info_font);
     ui->lblWordWrap->setVisible(true);
 
@@ -71,7 +71,18 @@ DashBoard::DashBoard(QWidget *parent)
 
     // no task recording at startup
     this->_recording_task = "";
-    connect(&_timer_recording_task, &QTimer::timeout, this, &DashBoard::UpdateRecords);    
+
+    // NOTE: the slot method needs a parameters, but the signal opf the timer
+    // has no arguments. An acceptable workaround only for this simple scenario
+    // is to use QSignalMapper class.
+    // See also: https://stackoverflow.com/questions/21150890/qt-5-assign-slot-with-parameters-to-a-qpushbutton
+    connect(&_timer_recording_task, SIGNAL(timeout()), &_timer_signal_mapper, SLOT(map()));
+    _timer_signal_mapper.setMapping(&_timer_recording_task, "timer");
+    connect(&_timer_signal_mapper, SIGNAL(mapped(QString)), this, SLOT(UpdateRecords(QString)));
+
+    // connect(&_timer_recording_task, &QTimer::timeout(), this, &DashBoard::UpdateRecords());
+
+
 }
 
 DashBoard::~DashBoard()
@@ -92,7 +103,7 @@ void DashBoard::AutoSave()
     this->saveFile(k_text_filename);
 }
 
-void DashBoard::UpdateRecords()
+void DashBoard::UpdateRecords(QString source)
 {    
     int cursor_position = ui->txtEditor->textCursor().position();
     int scrollbar_position = ui->txtEditor->verticalScrollBar()->value();
@@ -101,6 +112,8 @@ void DashBoard::UpdateRecords()
     // time update (replace the entire text in the QTextEdit), but
     // probably it's not a good design...
 
+    if (!_recording_task.isEmpty())
+    {
     // search the the task on the text and update the time spent on it
     QString today = QDate::currentDate().toString("yyyy-MM-dd");
     QString record = "\n" + today + "\\s+\\[([0-9]+)\\]\\s+[0-9]+h[0-9]*\\s+" + _recording_task;
@@ -110,8 +123,13 @@ void DashBoard::UpdateRecords()
     if (found_match.hasMatch())
     {
         // update time (minutes)
+            // NOTE: increment the value only when function is triggered by timer,
+            // when user save file just update as the value found via regex
         unsigned int time = found_match.captured(1).toUInt();
+            if (source == "timer")
+            {
         time++;
+            }
         QString time_human_readable = convMinutesToReadableString(time);
         text.replace(re_task_on_timesheet,
                      "\n" + today + "\t\t[" + QString::number(time) + "]\t\t" +
@@ -130,6 +148,7 @@ void DashBoard::UpdateRecords()
     cursor.setPosition(cursor_position, QTextCursor::MoveAnchor);
     ui->txtEditor->setTextCursor(cursor);
     ui->txtEditor->verticalScrollBar()->setValue(scrollbar_position);
+}
 }
 
 void DashBoard::UpdateGUILockscreen(bool active)
@@ -188,6 +207,7 @@ void DashBoard::keyPressEvent(QKeyEvent* key_event)
         else if ((key_event->key() == Qt::Key_S))
         {
             // <CTRL> + <s> to save current text
+            this->UpdateRecords("user");
             this->saveFile(k_text_filename);
         }
         else
@@ -287,7 +307,7 @@ void DashBoard::recordTask()
             ui->lblRecording->setVisible(false);
         }
     }
-    ui->lblRecording->setText("  Recording: " + _recording_task + "  ");
+    ui->lblRecording->setText("  Recording task: " + _recording_task + "  ");
 }
 
 void DashBoard::openFile(const QString file_path)

@@ -10,7 +10,7 @@ Highlight::Highlight(QTextDocument *parent)
     HighlightRule rule;
     QTextCharFormat keyword_format;
 
-    keyword_format.setForeground(Qt::magenta);
+    keyword_format.setForeground(Qt::darkGray);
     keyword_format.setBackground(Qt::transparent);
     keyword_format.setFontWeight(QFont::Bold);
     const QString keyword_patterns[] = {
@@ -19,9 +19,6 @@ Highlight::Highlight(QTextDocument *parent)
         QStringLiteral("\\bCRL\\b"),
         QStringLiteral("\\bBGL\\b"),
         QStringLiteral("\\bVBN\\b"),
-        QStringLiteral("\\bDESG_[0-9_]+\\b"),
-        QStringLiteral("\\bGATC_CRL_MEMO_[0-9_\\-]+\\b"),
-
     };
     for (const QString &pattern : keyword_patterns)
     {
@@ -31,15 +28,15 @@ Highlight::Highlight(QTextDocument *parent)
     }
 
     QTextCharFormat keyword_task;
-    keyword_task.setForeground(Qt::blue);
-    keyword_task.setBackground(Qt::transparent);
+    keyword_task.setForeground(Qt::white);
+    keyword_task.setBackground(Qt::blue);
     keyword_task.setFontWeight(QFont::Bold);
     rule.pattern = QRegularExpression(QStringLiteral("^(\\<.*\\>)"));
     rule.format = keyword_task;
     highlighting_rules.append(rule);
 
     QTextCharFormat keyword_status_todo;
-    keyword_status_todo.setForeground(Qt::blue);
+    keyword_status_todo.setForeground(Qt::black);
     keyword_status_todo.setBackground(Qt::cyan);
     keyword_status_todo.setFontWeight(QFont::Bold);
     rule.pattern = QRegularExpression(QStringLiteral("(\\[TODO\\])"));
@@ -70,20 +67,20 @@ Highlight::Highlight(QTextDocument *parent)
     rule.format = keyword_status_done;
     highlighting_rules.append(rule);
 
-    QTextCharFormat keyword_status_invalid;
-    keyword_status_invalid.setForeground(Qt::black);
-    keyword_status_invalid.setBackground(Qt::red);
-    keyword_status_invalid.setFontWeight(QFont::Normal);
-    rule.pattern = QRegularExpression(QStringLiteral("^.*(\\[[ \t]*\\]).*$"));
-    rule.format = keyword_status_invalid;
+    QTextCharFormat keyword_status_question;
+    keyword_status_question.setForeground(Qt::blue);
+    keyword_status_question.setBackground(Qt::transparent);
+    keyword_status_question.setFontWeight(QFont::Bold);
+    rule.pattern = QRegularExpression(QStringLiteral("(\\(\\?\\).*)$"));
+    rule.format = keyword_status_question;
     highlighting_rules.append(rule);
 
-    QTextCharFormat keyword_status_note;
-    keyword_status_invalid.setForeground(Qt::red);
-    keyword_status_invalid.setBackground(Qt::transparent);
-    keyword_status_invalid.setFontWeight(QFont::Bold);
+    QTextCharFormat keyword_status_warning;
+    keyword_status_warning.setForeground(Qt::red);
+    keyword_status_warning.setBackground(Qt::transparent);
+    keyword_status_warning.setFontWeight(QFont::Bold);
     rule.pattern = QRegularExpression(QStringLiteral("(\\(\\!\\).*)$"));
-    rule.format = keyword_status_invalid;
+    rule.format = keyword_status_warning;
     highlighting_rules.append(rule);
 
     QTextCharFormat keyword_pic;
